@@ -1,0 +1,26 @@
+﻿body, button {
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    font-size: 18px;
+}
+
+.section {
+    margin: 16px;
+}
+
+button {
+    color: #fff;
+    border: none;
+    padding: 10px 40px;
+    background-color: darkblue;
+    border-radius: 4px;
+    height: 40px;
+    transition: all linear 0.2s;
+}
+
+    button:hover {
+        background-color: rgb(100,40,230);
+    }
+
+    button[disabled] {
+        background-color: silver;
+    }

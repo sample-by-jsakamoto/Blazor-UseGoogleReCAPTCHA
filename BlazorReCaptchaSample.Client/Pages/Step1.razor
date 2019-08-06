@@ -1,0 +1,39 @@
+﻿@page  "/"
+@inject IUriHelper UrlHelper
+
+<div class="section">
+    <reCAPTCHA @ref="reCAPTCHAComponent" SiteKey="6Le7j7AUAAAAAORWIiHLTzHJtrQHOqC9d5GykoEl" OnSuccess="OnSuccess" OnExpired="OnExpired" />
+</div>
+
+<div class="section">
+    <button @onclick="OnClickPost" disabled="@(!ValidReCAPTCHA)">
+        POST
+    </button>
+</div>
+
+@code {
+
+    private reCAPTCHA reCAPTCHAComponent;
+
+    private bool ValidReCAPTCHA = false;
+
+    private void OnSuccess()
+    {
+        ValidReCAPTCHA = true;
+    }
+
+    private void OnExpired()
+    {
+        ValidReCAPTCHA = false;
+    }
+
+    private async Task OnClickPost()
+    {
+        if (ValidReCAPTCHA)
+        {
+            var response = await reCAPTCHAComponent.GetResponseAsync();
+            Console.WriteLine($"response is: {response}");
+            UrlHelper.NavigateTo("/valid");
+        }
+    }
+}
