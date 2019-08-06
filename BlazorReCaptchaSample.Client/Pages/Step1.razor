@@ -1,12 +1,14 @@
 ﻿@page  "/"
+@inject IJSRuntime JS
 @inject IUriHelper UrlHelper
+@inject HttpClient Http
 
 <div class="section">
     <reCAPTCHA @ref="reCAPTCHAComponent" SiteKey="6Le7j7AUAAAAAORWIiHLTzHJtrQHOqC9d5GykoEl" OnSuccess="OnSuccess" OnExpired="OnExpired" />
 </div>
 
 <div class="section">
-    <button @onclick="OnClickPost" disabled="@(!ValidReCAPTCHA)">
+    <button @onclick="OnClickPost" disabled="@DisablePostButton">
         POST
     </button>
 </div>
@@ -16,6 +18,10 @@
     private reCAPTCHA reCAPTCHAComponent;
 
     private bool ValidReCAPTCHA = false;
+
+    private bool ServerVerificatiing = false;
+
+    private bool DisablePostButton => !ValidReCAPTCHA || ServerVerificatiing;
 
     private void OnSuccess()
     {
@@ -32,8 +38,19 @@
         if (ValidReCAPTCHA)
         {
             var response = await reCAPTCHAComponent.GetResponseAsync();
-            Console.WriteLine($"response is: {response}");
-            UrlHelper.NavigateTo("/valid");
+            try
+            {
+                ServerVerificatiing = true;
+                StateHasChanged();
+                await Http.PostJsonAsync("/api/sample", new SampleAPIArgs { reCAPTCHAResponse = response });
+                UrlHelper.NavigateTo("/valid");
+            }
+            catch (HttpRequestException e)
+            {
+                await JS.InvokeAsync<object>("alert", e.Message);
+                ServerVerificatiing = false;
+                StateHasChanged();
+            }
         }
     }
 }

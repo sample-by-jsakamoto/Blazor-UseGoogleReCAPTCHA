@@ -3,3 +3,4 @@ obj/
 .vs/
 *.user
 *.suo
+appSettings.Development.json
