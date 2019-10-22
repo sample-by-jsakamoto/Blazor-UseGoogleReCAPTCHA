@@ -1,5 +1,5 @@
 ﻿@page  "/valid"
-@inject IUriHelper UrlHelper
+@inject NavigationManager Navigation
 
 <div class="section">
     Your post is valid.
@@ -13,6 +13,6 @@
 
     private void OnClickGoBack()
     {
-        UrlHelper.NavigateTo("/");
+        Navigation.NavigateTo("/");
     }
 }

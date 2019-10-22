@@ -1,10 +1,10 @@
 ﻿@page  "/"
 @inject IJSRuntime JS
-@inject IUriHelper UrlHelper
+@inject NavigationManager Navigation
 @inject HttpClient Http
 
 <div class="section">
-    <reCAPTCHA @ref="reCAPTCHAComponent" SiteKey="6Le7j7AUAAAAAORWIiHLTzHJtrQHOqC9d5GykoEl" OnSuccess="OnSuccess" OnExpired="OnExpired" />
+    <ReCAPTCHA @ref="reCAPTCHAComponent" SiteKey="6Le7j7AUAAAAAORWIiHLTzHJtrQHOqC9d5GykoEl" OnSuccess="OnSuccess" OnExpired="OnExpired" />
 </div>
 
 <div class="section">
@@ -15,7 +15,7 @@
 
 @code {
 
-    private reCAPTCHA reCAPTCHAComponent;
+    private ReCAPTCHA reCAPTCHAComponent;
 
     private bool ValidReCAPTCHA = false;
 
@@ -43,7 +43,7 @@
                 ServerVerificatiing = true;
                 StateHasChanged();
                 await Http.PostJsonAsync("/api/sample", new SampleAPIArgs { reCAPTCHAResponse = response });
-                UrlHelper.NavigateTo("/valid");
+                Navigation.NavigateTo("/valid");
             }
             catch (HttpRequestException e)
             {
