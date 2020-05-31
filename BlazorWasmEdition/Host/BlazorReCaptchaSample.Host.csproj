@@ -11,8 +11,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\BlazorReCaptchaSample.Client\BlazorReCaptchaSample.Client.csproj" />
-    <ProjectReference Include="..\BlazorReCaptchaSample.Shared\BlazorReCaptchaSample.Shared.csproj" />
+    <ProjectReference Include="..\Client\BlazorReCaptchaSample.Client.csproj" />
+    <ProjectReference Include="..\Shared\BlazorReCaptchaSample.Shared.csproj" />
   </ItemGroup>
 
 </Project>

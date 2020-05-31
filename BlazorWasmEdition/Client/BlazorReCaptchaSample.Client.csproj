@@ -13,8 +13,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\BlazorReCaptchaSample.Components\BlazorReCaptchaSample.Components.csproj" />
-    <ProjectReference Include="..\BlazorReCaptchaSample.Shared\BlazorReCaptchaSample.Shared.csproj" />
+    <ProjectReference Include="..\Components\BlazorReCaptchaSample.Components.csproj" />
+    <ProjectReference Include="..\Shared\BlazorReCaptchaSample.Shared.csproj" />
   </ItemGroup>
 
 </Project>

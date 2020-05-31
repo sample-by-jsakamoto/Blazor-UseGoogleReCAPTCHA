@@ -16,7 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\BlazorReCaptchaSample.Shared\BlazorReCaptchaSample.Shared.csproj" />
+    <ProjectReference Include="..\Shared\BlazorReCaptchaSample.Shared.csproj" />
   </ItemGroup>
 
   <PropertyGroup Condition="'$(Configuration)' == 'Debug'">

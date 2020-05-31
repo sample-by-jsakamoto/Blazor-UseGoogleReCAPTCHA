@@ -27,29 +27,11 @@ namespace BlazorReCaptchaSample.Server
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            //var clientBlazorWebRootPath = default(string);
-
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
                 app.UseWebAssemblyDebugging();
             }
-            //else
-            //{
-            //    if (env.WebRootPath != null)
-            //    {
-            //        var pathOfIndex = Path.Combine(env.WebRootPath, "index.html");
-            //        var pathOfContent = Path.Combine(env.WebRootPath, "_content");
-            //        if (!File.Exists(pathOfIndex) && Directory.Exists(pathOfContent))
-            //        {
-            //            clientBlazorWebRootPath = Directory.GetDirectories(pathOfContent).FirstOrDefault();
-            //            if (clientBlazorWebRootPath != null)
-            //            {
-            //                env.WebRootPath = clientBlazorWebRootPath;
-            //            }
-            //        }
-            //    }
-            //}
 
             app.UseBlazorFrameworkFiles();
             app.UseStaticFiles();
@@ -61,14 +43,6 @@ namespace BlazorReCaptchaSample.Server
                 endpoints.MapDefaultControllerRoute();
                 endpoints.MapFallbackToFile("index.html");
             });
-
-            //if (clientBlazorWebRootPath != null)
-            //{
-            //    app.UseStaticFiles(new StaticFileOptions
-            //    {
-            //        FileProvider = new PhysicalFileProvider(clientBlazorWebRootPath)
-            //    });
-            //}
         }
     }
 }
