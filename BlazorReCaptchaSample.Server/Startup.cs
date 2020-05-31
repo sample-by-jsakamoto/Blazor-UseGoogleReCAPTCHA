@@ -1,13 +1,8 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
-using Newtonsoft.Json.Serialization;
-using System.IO;
-using System.Linq;
 
 namespace BlazorReCaptchaSample.Server
 {
@@ -26,60 +21,54 @@ namespace BlazorReCaptchaSample.Server
         {
             services.Configure<reCAPTCHAVerificationOptions>(Configuration.GetSection("reCAPTCHA"));
             services.AddHttpClient();
-            services.AddMvc().AddNewtonsoftJson();
-            services.AddResponseCompression(opts =>
-            {
-                opts.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(
-                    new[] { "application/octet-stream" });
-            });
+            services.AddMvc();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            app.UseResponseCompression();
-            var clientBlazorWebRootPath = default(string);
+            //var clientBlazorWebRootPath = default(string);
 
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseBlazorDebugging();
+                app.UseWebAssemblyDebugging();
             }
-            else
-            {
-                if (env.WebRootPath != null)
-                {
-                    var pathOfIndex = Path.Combine(env.WebRootPath, "index.html");
-                    var pathOfContent = Path.Combine(env.WebRootPath, "_content");
-                    if (!File.Exists(pathOfIndex) && Directory.Exists(pathOfContent))
-                    {
-                        clientBlazorWebRootPath = Directory.GetDirectories(pathOfContent).FirstOrDefault();
-                        if (clientBlazorWebRootPath != null)
-                        {
-                            env.WebRootPath = clientBlazorWebRootPath;
-                        }
-                    }
-                }
-            }
+            //else
+            //{
+            //    if (env.WebRootPath != null)
+            //    {
+            //        var pathOfIndex = Path.Combine(env.WebRootPath, "index.html");
+            //        var pathOfContent = Path.Combine(env.WebRootPath, "_content");
+            //        if (!File.Exists(pathOfIndex) && Directory.Exists(pathOfContent))
+            //        {
+            //            clientBlazorWebRootPath = Directory.GetDirectories(pathOfContent).FirstOrDefault();
+            //            if (clientBlazorWebRootPath != null)
+            //            {
+            //                env.WebRootPath = clientBlazorWebRootPath;
+            //            }
+            //        }
+            //    }
+            //}
 
+            app.UseBlazorFrameworkFiles();
             app.UseStaticFiles();
-            app.UseClientSideBlazorFiles<Client.Startup>();
 
             app.UseRouting();
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapDefaultControllerRoute();
-                endpoints.MapFallbackToClientSideBlazor<Client.Startup>("index.html");
+                endpoints.MapFallbackToFile("index.html");
             });
 
-            if (clientBlazorWebRootPath != null)
-            {
-                app.UseStaticFiles(new StaticFileOptions
-                {
-                    FileProvider = new PhysicalFileProvider(clientBlazorWebRootPath)
-                });
-            }
+            //if (clientBlazorWebRootPath != null)
+            //{
+            //    app.UseStaticFiles(new StaticFileOptions
+            //    {
+            //        FileProvider = new PhysicalFileProvider(clientBlazorWebRootPath)
+            //    });
+            //}
         }
     }
 }

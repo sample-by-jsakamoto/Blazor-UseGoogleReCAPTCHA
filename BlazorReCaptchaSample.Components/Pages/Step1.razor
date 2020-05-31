@@ -42,7 +42,7 @@
             {
                 ServerVerificatiing = true;
                 StateHasChanged();
-                await Http.PostJsonAsync("/api/sample", new SampleAPIArgs { reCAPTCHAResponse = response });
+                await Http.PostAsJsonAsync("/api/sample", new SampleAPIArgs { reCAPTCHAResponse = response });
                 Navigation.NavigateTo("/valid");
             }
             catch (HttpRequestException e)
