@@ -1,0 +1,18 @@
+﻿@page  "/valid"
+@inject NavigationManager Navigation
+
+<div class="section">
+    Your post is valid.
+</div>
+
+<div class="section">
+    <button @onclick="OnClickGoBack">GO BACK</button>
+</div>
+
+@code {
+
+    private void OnClickGoBack()
+    {
+        Navigation.NavigateTo("/");
+    }
+}

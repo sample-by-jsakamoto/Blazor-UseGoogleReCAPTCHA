@@ -1,0 +1,65 @@
+﻿@page  "/"
+@inject IJSRuntime JS
+@inject NavigationManager Navigation
+@inject SampleAPI SampleAPI
+
+<div class="section">
+    <ReCAPTCHA @ref="reCAPTCHAComponent" SiteKey="6Le7j7AUAAAAAORWIiHLTzHJtrQHOqC9d5GykoEl" OnSuccess="OnSuccess" OnExpired="OnExpired" />
+</div>
+
+<div class="section">
+    <button @onclick="OnClickPost" disabled="@DisablePostButton">
+        POST
+    </button>
+</div>
+
+@code {
+
+    private ReCAPTCHA reCAPTCHAComponent;
+
+    private bool ValidReCAPTCHA = false;
+
+    private bool ServerVerificatiing = false;
+
+    private bool DisablePostButton => !ValidReCAPTCHA || ServerVerificatiing;
+
+    private void OnSuccess()
+    {
+        ValidReCAPTCHA = true;
+    }
+
+    private void OnExpired()
+    {
+        ValidReCAPTCHA = false;
+    }
+
+    private async Task OnClickPost()
+    {
+        if (ValidReCAPTCHA)
+        {
+            var response = await reCAPTCHAComponent.GetResponseAsync();
+            try
+            {
+                ServerVerificatiing = true;
+                StateHasChanged();
+                var result = await SampleAPI.Post(response);
+                if (result.Success)
+                {
+                    Navigation.NavigateTo("/valid");
+                }
+                else
+                {
+                    await JS.InvokeAsync<object>("alert", string.Join(", ", result.ErrorCodes));
+                    ServerVerificatiing = false;
+                    StateHasChanged();
+                }
+            }
+            catch (HttpRequestException e)
+            {
+                await JS.InvokeAsync<object>("alert", e.Message);
+                ServerVerificatiing = false;
+                StateHasChanged();
+            }
+        }
+    }
+}

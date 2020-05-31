@@ -1,0 +1,52 @@
+﻿@using  System.ComponentModel
+@inject IJSRuntime JS
+
+<div id="@UniqueId"></div>
+
+@code {
+
+    [Parameter]
+    public string SiteKey { get; set; }
+
+    [Parameter]
+    public EventCallback<string> OnSuccess { get; set; }
+
+    [Parameter]
+    public EventCallback OnExpired { get; set; }
+
+    private string UniqueId = Guid.NewGuid().ToString();
+
+    private int WidgetId;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await JS.InvokeAsync<object>("My.reCAPTCHA.init");
+            this.WidgetId = await JS.InvokeAsync<int>("My.reCAPTCHA.render", DotNetObjectReference.Create(this), UniqueId, SiteKey);
+        }
+    }
+
+    [JSInvokable, EditorBrowsable(EditorBrowsableState.Never)]
+    public void CallbackOnSuccess(string response)
+    {
+        if (OnSuccess.HasDelegate)
+        {
+            OnSuccess.InvokeAsync(response);
+        }
+    }
+
+    [JSInvokable, EditorBrowsable(EditorBrowsableState.Never)]
+    public void CallbackOnExpired()
+    {
+        if (OnExpired.HasDelegate)
+        {
+            OnExpired.InvokeAsync(null);
+        }
+    }
+
+    public ValueTask<string> GetResponseAsync()
+    {
+        return JS.InvokeAsync<string>("My.reCAPTCHA.getResponse", WidgetId);
+    }
+}
